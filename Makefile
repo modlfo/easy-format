@@ -53,7 +53,7 @@ easy_format_example.html: simple_example.out simple_example.ml
 	caml2html easy_format_example.ml -t -o easy_format_example.html
 
 soft-clean:
-	rm -f *.cm[iox] *.cmxs *.o *.annot \
+	rm -f *.cm[iox] *.cmxs *.o *.obj *.annot \
 		test_easy_format lambda_example simple_example \
 		bytecode nativecode
 
@@ -65,9 +65,9 @@ clean: soft-clean
 
 COMMON_INSTALL_FILES = META easy_format.cmi easy_format.mli
 BC_INSTALL_FILES = easy_format.cmo
-NC_INSTALL_FILES = easy_format.cmx easy_format.o $(CMXS)
+NC_INSTALL_FILES = easy_format.cmx easy_format.o easy_format.obj $(CMXS)
 
-install:
+install: default
 	echo "version = \"$(VERSION)\"" > META; cat META.tpl >> META
 	INSTALL_FILES="$(COMMON_INSTALL_FILES)"; \
 		if test -f bytecode; then \
@@ -76,7 +76,7 @@ install:
 		if test -f nativecode; then \
 		  INSTALL_FILES="$$INSTALL_FILES $(NC_INSTALL_FILES)"; \
 		fi; \
-		ocamlfind install easy-format $$INSTALL_FILES
+		ocamlfind install -optional easy-format $$INSTALL_FILES
 
 uninstall:
 	ocamlfind remove easy-format
